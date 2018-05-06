@@ -1,0 +1,403 @@
+body, html {
+ background-color: #ebeef0;
+}
+
+.has-success .form-control-feedback,
+.has-success .form-control-label,
+.has-success .col-form-label,
+.has-success .form-check-label,
+.has-success .custom-control {
+    color: #5cb85c;
+}
+
+.has-success .form-control {
+    border-color: #5cb85c;
+}
+
+.has-success .input-group-addon {
+    color: #5cb85c;
+    border-color: #5cb85c;
+    background-color: #eaf6ea;
+}
+
+.has-success .form-control-success {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%235cb85c' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3E%3C/svg%3E");
+}
+
+.has-warning .form-control-feedback,
+.has-warning .form-control-label,
+.has-warning .col-form-label,
+.has-warning .form-check-label,
+.has-warning .custom-control {
+    color: #f0ad4e;
+}
+
+.has-warning .form-control {
+    border-color: #f0ad4e;
+}
+
+.has-warning .input-group-addon {
+    color: #f0ad4e;
+    border-color: #f0ad4e;
+    background-color: white;
+}
+
+.has-warning .form-control-warning {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%23f0ad4e' d='M4.4 5.324h-.8v-2.46h.8zm0 1.42h-.8V5.89h.8zM3.76.63L.04 7.075c-.115.2.016.425.26.426h7.397c.242 0 .372-.226.258-.426C6.726 4.924 5.47 2.79 4.253.63c-.113-.174-.39-.174-.494 0z'/%3E%3C/svg%3E");
+}
+
+.has-danger .form-control-feedback,
+.has-danger .form-control-label,
+.has-danger .col-form-label,
+.has-danger .form-check-label,
+.has-danger .custom-control {
+    color: #d9534f;
+}
+
+.has-danger .form-control {
+    border-color: #d9534f;
+}
+
+.has-danger .input-group-addon {
+    color: #d9534f;
+    border-color: #d9534f;
+    background-color: #fdf7f7;
+}
+
+.has-danger .form-control-danger {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d9534f' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E");
+}
+
+
+/*** HOME COLLAPSABLE STYLE ****/
+
+.dash-status {
+    margin-bottom: 0;
+}
+
+.dash-status>.dash-child {}
+
+.dash-status>.last-dash-child {}
+
+.dash-status>.dash-child>p {
+    text-transform: uppercase;
+    color: gray;
+}
+
+.dash-status>.last-dash-child>p {
+    text-transform: uppercase;
+    color: gray;
+}
+
+.dash-status>.last-dash-status>p {
+    text-transform: uppercase;
+    color: gray;
+}
+
+.dash-status .app-count {
+    font-size: 25px;
+}
+
+
+/*** CUSTOME SEARCH BAR ****/
+
+#custom-search-input {
+    margin: 0;
+    margin-top: 10px;
+    padding: 0;
+}
+
+#custom-search-input .search-query {
+    padding-right: 3px;
+    padding-right: 4px \9;
+    padding-left: 3px;
+    padding-left: 4px \9;
+    /* IE7-8 doesn't have border-radius, so don't indent the padding */
+    margin-bottom: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#custom-search-input button {
+    border: 0;
+    background: none;
+    /** belows styles are working good */
+    padding: 2px 5px;
+    margin-top: 2px;
+    position: relative;
+    left: -28px;
+    /* IE7-8 doesn't have border-radius, so don't indent the padding */
+    margin-bottom: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    color: #D9230F;
+}
+
+.search-query:focus+button {
+    z-index: 3;
+}
+
+
+/*** LOADING ANIMATION ****/
+
+.loader,
+.loader:before,
+.loader:after {
+    border-radius: 50%;
+}
+
+.loader {
+    color: #0080ff;
+    font-size: 11px;
+    text-indent: -99999em;
+    margin: 55px auto;
+    position: relative;
+    width: 10em;
+    height: 10em;
+    box-shadow: inset 0 0 0 1em;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.loader:before,
+.loader:after {
+    position: absolute;
+    content: '';
+}
+
+.loader:before {
+    width: 5.2em;
+    height: 10.2em;
+    background: #0080ff;
+    border-radius: 10.2em 0 0 10.2em;
+    top: -0.1em;
+    left: -0.1em;
+    -webkit-transform-origin: 5.2em 5.1em;
+    transform-origin: 5.2em 5.1em;
+    -webkit-animation: load2 2s infinite ease 1.5s;
+    animation: load2 2s infinite ease 1.5s;
+}
+
+.loader:after {
+    width: 5.2em;
+    height: 10.2em;
+    background: #0080ff;
+    border-radius: 0 10.2em 10.2em 0;
+    top: -0.1em;
+    left: 5.1em;
+    -webkit-transform-origin: 0px 5.1em;
+    transform-origin: 0px 5.1em;
+    -webkit-animation: load2 2s infinite ease;
+    animation: load2 2s infinite ease;
+}
+
+@-webkit-keyframes load2 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load2 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+
+/*** LOADING ANIMATION 2 ****/
+
+.spinner {
+    animation: rotator 1.4s linear infinite;
+}
+
+@keyframes rotator {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(270deg);
+    }
+}
+
+.path {
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+}
+
+@keyframes colors {
+    0% {
+        stroke: #4285f4;
+    }
+    25% {
+        stroke: #de3e35;
+    }
+    50% {
+        stroke: #f7c223;
+    }
+    75% {
+        stroke: #1b9a59;
+    }
+    100% {
+        stroke: #4285f4;
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dashoffset: 187;
+    }
+    50% {
+        stroke-dashoffset: 46.75;
+        transform: rotate(135deg);
+    }
+    100% {
+        stroke-dashoffset: 187;
+        transform: rotate(450deg);
+    }
+}
+
+
+/*** CROP IMAGE ****/
+
+.cropit-preview {
+    background-color: #f8f8f8;
+    background-size: cover;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-top: 7px;
+    width: 150px;
+    height: 150px;
+}
+
+.cropit-preview-image-container {
+    cursor: move;
+}
+
+.image-size-label {
+    margin-top: 10px;
+}
+
+#result {
+    margin-top: 10px;
+    width: 900px;
+}
+
+#result-data {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+
+/***** SCROLLBAR DESIGN *****/
+
+.navbar-sidenav::-webkit-scrollbar {
+    width: 8px;
+}
+
+.navbar-sidenav.thin::-webkit-scrollbar {
+    width: 2px;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(100, 100, 100, 0.4);
+}
+
+/***** SWITCH STYLE ****/
+
+.switch {
+    position: relative;
+    /* display: inline-block; */
+    width: 50px;
+    height: 23px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 15px;
+    width: 15px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+
+.slider.round {
+    border-radius: 20px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/***** Nav Link color on less than 986px width *****/
+
+      @media (max-width: 986px) {
+          #mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item>.nav-link {
+              color: #80bdff ! important;
+          }
+          #mainNav.navbar-dark .navbar-collapse .navbar-sidenav>.nav-item .sidenav-second-level>li>a {
+              color: #a9d0fb ! important;
+          }
+      }
