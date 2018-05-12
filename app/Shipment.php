@@ -40,9 +40,9 @@ class Shipment extends Model
     {
         $checkDate = !empty($date) ? Carbon::parse($date) : Carbon::today();
         // // Returns Cardholders from shipment where found in logs 
-        return $query->whereDate('created_at', '=', $checkDate)
+        return $query->whereDate('created_at', $checkDate)
                     ->where('CardholderID',$cardholder)
-                    ->orderBy('created_at','DESC')
+                    ->orderBy('id','DESC')
                     ->pluck('shipment_number');
     }
 

@@ -52693,13 +52693,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -57916,19 +57909,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_moment__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -94102,12 +94082,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "src": '/storage/' + barrier.avatar,
         "align": "middle"
       }
-    }), _vm._v(" "), (barrier.isNowShipped) ? _c('span', {
-      staticClass: "text-center d-block text-success",
-      staticStyle: {
-        "font-size": "40px"
-      }
-    }, [_vm._v("\n                                ASSIGNED - " + _vm._s(barrier.isNowShipped) + "\n                    ")]) : _vm._e()]), _vm._v(" "), _c('div', {
+    })]), _vm._v(" "), _c('div', {
       staticClass: "col-sm-6 p-0 border border-top-0 border-right-0 border-bottom-0"
     }, [_c('ul', {
       staticClass: "list-group list-group-flush",
@@ -94162,7 +94137,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticStyle: {
         "font-size": "35px"
       }
-    }, [_vm._v("\n                                NO IN  \n                            ")])]), _vm._v(" "), (_vm.isFromLapaz == 1) ? _c('li', {
+    }, [_vm._v("\n                                NO IN  \n                            ")])]), _vm._v(" "), _c('li', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (barrier.isNowShipped),
+        expression: "barrier.isNowShipped"
+      }],
+      staticClass: "list-group-item",
+      class: {
+        'list-group-item-danger': barrier.availability != 1
+      }
+    }, [_c('small', {
+      staticClass: "text-muted"
+    }, [_vm._v("SHIPMENT NUMBER:")]), _c('br'), _vm._v(" "), _c('span', {
+      staticClass: "text-success",
+      staticStyle: {
+        "font-size": "40px"
+      }
+    }, [_vm._v("\n                                SHIPMENT ASSIGNED - " + _vm._s(barrier.isNowShipped) + "\n                             ")])]), _vm._v(" "), (_vm.isFromLapaz == 1) ? _c('li', {
       staticClass: "list-group-item list-group-item-info"
     }, [_c('span', {
       staticClass: "text-dark text-uppercase",
@@ -97226,12 +97219,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "src": '/storage/' + barrier.avatar,
         "align": "middle"
       }
-    }), _vm._v(" "), (barrier.isNowShipped) ? _c('span', {
-      staticClass: "text-center d-block text-success",
-      staticStyle: {
-        "font-size": "40px"
-      }
-    }, [_vm._v("\n                                ASSIGNED - " + _vm._s(barrier.isNowShipped) + "\n                    ")]) : _vm._e()]), _vm._v(" "), _c('div', {
+    })]), _vm._v(" "), _c('div', {
       staticClass: "col-sm-6 p-0 border border-top-0 border-right-0 border-bottom-0"
     }, [_c('ul', {
       staticClass: "list-group list-group-flush",
@@ -97286,7 +97274,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticStyle: {
         "font-size": "35px"
       }
-    }, [_vm._v("\n                                NO IN  \n                            ")])])])])])])
+    }, [_vm._v("\n                                NO IN  \n                            ")])]), _vm._v(" "), _c('li', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (barrier.isNowShipped),
+        expression: "barrier.isNowShipped"
+      }],
+      staticClass: "list-group-item",
+      class: {
+        'list-group-item-danger': barrier.availability != 1
+      }
+    }, [_c('small', {
+      staticClass: "text-muted"
+    }, [_vm._v("SHIPMENT NUMBER:")]), _c('br'), _vm._v(" "), _c('span', {
+      staticClass: "text-success",
+      staticStyle: {
+        "font-size": "40px"
+      }
+    }, [_vm._v("\n                                SHIPMENT ASSIGNED - " + _vm._s(barrier.isNowShipped) + "\n                             ")])])])])])])
   }))])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true

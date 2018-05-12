@@ -16,23 +16,8 @@
                             </span>
                         </div>
 
-
-                        <!-- <div v-if="barrier.plate_availability == 0" class="border border-danger p-3" style="position: absolute; top: 45%; left: 16%; height: 150xp; width: 500px;">
-                            <span class="display-4 text-danger text-uppercase" style="font-weight: bold">
-                                TRUCK IS FOR INSPECTION
-                            </span><br/>
-                            <span class="h3 text-uppercase">Please proceed to SPC</span>
-                        </div> -->
-
                         <img class="img-responsive rounded-circle mx-auto" :class="{ 'deactived-img' : barrier.availability == 0 || barrier.plate_availability == 0 }" style="height: 450px; width: auto;" :src="'/storage/' + barrier.avatar" align="middle">
                     
-                        <!-- <span v-if="barrier.is_shipment" class="border border-success p-3 mt-2 rounded text-center text-success d-block" style="font-size: 35px;">
-                            SHIPMENT ASSINED
-                        </span> -->
-
-                         <span v-if="barrier.isNowShipped" class="text-center d-block text-success" style="font-size: 40px;">
-                                    ASSIGNED - {{ barrier.isNowShipped }}
-                        </span>
 
                     </div>
                     <div class="col-sm-6 p-0 border border-top-0 border-right-0 border-bottom-0">
@@ -69,16 +54,18 @@
                                 </span>
                             </li>
 
-                            <li class="list-group-item list-group-item-info" v-if="isFromLapaz == 1">
-                                <span class="text-dark text-uppercase" style="font-size: 40px;">Already Tapped from lapaz</span>
+                           
+
+                              <li class="list-group-item"  v-show="barrier.isNowShipped" :class="{ 'list-group-item-danger' : barrier.availability != 1}">
+                                 <small class="text-muted">SHIPMENT NUMBER:</small><br/>
+                                  <span class="text-success" style="font-size: 40px;">
+                                    SHIPMENT ASSIGNED - {{ barrier.isNowShipped }}
+                                 </span>
                             </li>
 
-                             <!-- <li class="list-group-item" v-if="i === 0" :class="{ 'list-group-item-danger' : barrier.availability != 1, 'list-group-item-primary' : i===0 }">
-                                <span class="text-dark">TRUCKS IN PLANT:</span><br/>
-                                 <span style="font-size: 40px;">
-                                    {{ currentTrucks }}
-                                </span>
-                            </li> -->
+                             <li class="list-group-item list-group-item-info" v-if="isFromLapaz == 1">
+                                <span class="text-dark text-uppercase" style="font-size: 40px;">Already Tapped from lapaz</span>
+                            </li>
                         </ul>
            
            
