@@ -8,7 +8,12 @@ class GateEntry extends Model
 {
     protected $table = 'gate_entries';
 
-     protected $connection = "sqlsrv";
+    protected $connection = "sqlsrv";
+
+    public function getDates()
+    {
+        return [];
+    }
 
     protected $fillable  = [
         'gate_number',

@@ -8,6 +8,9 @@ use Carbon\Carbon;
 
 class Shipment extends Model
 {
+
+    protected $connection = "sqlsrv";
+
     protected $unguard = [
         '*'
     ];
