@@ -59,17 +59,15 @@ class BarriersController extends Controller
 
     public function getBarrierLocation($door, $controller)
     {
-
-        $barriers = Log::select('LogID','CardholderID')
-        // ->whereDate('LocalTime',Carbon::today())
+        $barriers = Log::select('LogID','CardholderID','LocalTime')
+        ->whereDate('LocalTime',Carbon::today())
         ->where('DoorID',$door)
         ->where('ControllerID', $controller)
         ->whereNotIn('CardholderID',$this->barrierNoDriver())
         ->where('CardholderID', '>=', 15)
         ->orderBy('LocalTime','DESC')
-        ->with('driver')
-        ->take(1)
-        ->get();
+        ->with('driver','driver.image','driver.truck','driver.hauler','shipment')
+        ->first();
 
         return $barriers;
     }
@@ -79,113 +77,21 @@ class BarriersController extends Controller
     {
         // Get Logs from Lapaz Barrier RFID
         $lapaz_drivers = $this->getBarrierLocation(0,5);
-
-        // Format the array JSON return
-        $arr = array();
-        foreach($lapaz_drivers as $entry) {
-            foreach($entry->drivers as $driver) {
-
-                // $isShipped = Serve::isDriverShipped($driver->id);
-
-                    $data = array(
-
-                        'LogID' => $entry->LogID,
-                        'CardholderID' => $entry->CardholderID,
-                        'driver' => $driver->name,
-                        'availability' => $driver->availability,
-                        'avatar' => empty($driver->image) ?  $driver->avatar : $driver->image->avatar,
-                        'plate_number' => empty($driver->truck->plate_number) ? 'NO DRIVER' : $driver->truck->plate_number,
-                        'plate_availability' => empty($driver->truck->plate_number) ? null : $driver->truck->availability,
-                        'hauler_name' => empty($driver->hauler->name) ? 'NO HAULER' : $driver->hauler->name,
-                        'inLocalTime' =>  $this->getBarrierDirection(0 ,$entry->CardholderID, 1),
-                        // 'outLocalTime' =>  $this->getBarrierDirection(0, $entry->CardholderID, 2) < 
-                        //                     $this->getBarrierDirection(0, $entry->CardholderID, 1) ? null : 
-                        //                     $this->getBarrierDirection(0, $entry->CardholderID, 2),
-                        'isNowShipped' => Shipment::checkIfShipped($entry->CardholderID,null)->first(),
-                    );
-
-                    array_push($arr, $data);
-            }
-        }
-
-        return $arr;
+        return $lapaz_drivers;
     }
 
     public function manilaAPI()
     {
-        // Get Logs from Lapaz Barrier RFID
+       // Get Logs from Lapaz Barrier RFID
         $manila_drivers = $this->getBarrierLocation(3,2);
-
-        // Format the array JSON return
-        $arr = array();
-        foreach($manila_drivers as $entry) {
-            foreach($entry->drivers as $driver) {
-
-                // $isShipped = Serve::isDriverShipped($driver->id);
-
-                    $data = array(
-
-                        'LogID' => $entry->LogID,
-                        'CardholderID' => $entry->CardholderID,
-                        'driver' => $driver->name,
-                        'availability' => $driver->availability,
-                        'avatar' => empty($driver->image) ?  $driver->avatar : $driver->image->avatar,
-                        'plate_number' => empty($driver->truck->plate_number) ? 'NO DRIVER' : $driver->truck->plate_number,
-                        'plate_availability' => empty($driver->truck->plate_number) ? null : $driver->truck->availability,
-                        'hauler_name' => empty($driver->hauler->name) ? 'NO HAULER' : $driver->hauler->name,
-                        'inLocalTime' =>  $this->getBarrierDirection(3 ,$entry->CardholderID, 1),
-                        // 'outLocalTime' =>  $this->getBarrierDirection(3, $entry->CardholderID, 2) < 
-                        //                     $this->getBarrierDirection(3, $entry->CardholderID, 1) ? null : 
-                        //                     $this->getBarrierDirection(3, $entry->CardholderID, 2),
-                        'isFromLapaz' => array_has($entry->CardholdereID, Log::barrierLocation(0,5)) ? 1 : null,
-                        'isNowShipped' => Shipment::checkIfShipped($entry->CardholderID,null)->first(),
-
-
-                    );
-
-                    array_push($arr, $data); 
-            }
-        }
-
-        return $arr;
+        return $manila_drivers;
     }
 
     public function bataanAPI()
     {
          // Get Logs from Bataan Barrier RFID
         $bataan_drivers =  $this->getBarrierLocation(0,9);
-        
-
-        // Format the array JSON return
-        $arr = array();
-        foreach($bataan_drivers as $entry) {
-            foreach($entry->drivers as $driver) {
-
-                // $isShipped = Serve::isDriverShipped($driver->id);
-
-                    $data = array(
-
-                        'LogID' => $entry->LogID,
-                        'CardholderID' => $entry->CardholderID,
-                        'driver' => $driver->name,
-                        'availability' => $driver->availability,
-                        'avatar' => empty($driver->image) ?  $driver->avatar : $driver->image->avatar,
-                        'plate_number' => empty($driver->truck->plate_number) ? 'NO DRIVER' : $driver->truck->plate_number,
-                        'plate_availability' => empty($driver->truck->plate_number) ? null : $driver->truck->availability,
-                        'hauler_name' => empty($driver->hauler->name) ? 'NO HAULER' : $driver->hauler->name,
-                        'inLocalTime' =>  $this->getBarrierDirection(0 ,$entry->CardholderID, 1),
-                        // 'outLocalTime' =>  $this->getBarrierDirection(0, $entry->CardholderID, 2) < 
-                        //                     $this->getBarrierDirection(0, $entry->CardholderID, 1) ? null : 
-                        //                     $this->getBarrierDirection(0, $entry->CardholderID, 2),
-                        'isNowShipped' => Shipment::checkIfShipped($entry->CardholderID,null)->first(),
-
-                    );
-
-                    array_push($arr, $data);
-            }
-        }
-
-        return $arr;
+        return $bataan_drivers;
     }
 
     // View Functions

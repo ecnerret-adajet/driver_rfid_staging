@@ -5,67 +5,58 @@
                 <div class="col-sm-12">
                     <ul class="list-group">
 
-            <li v-for="(barrier, i) in entries" :key="i" class="rounded-0 list-group-item pb-0 pt-0 rounded-0"  :class="{ 'list-group-item-danger' : barrier.availability != 1, 'list-group-item-warning' : barrier.plate_availability != 1 }">
+            <li v-if="entries.length != 0" class="rounded-0 list-group-item pb-0 pt-0 rounded-0">
 
                 <div class="row">
                     <div class="col-sm-6 p-3 text-center">
-                        
-                        <div v-if="barrier.availability == 0 || barrier.plate_availability == 0" class="border border-danger p-3" style="position: absolute; top: 45%; left: 30%; height: 150xp; width: 400px;">
+                    <i class="fa fa-circle text-success float-left"></i>
+
+                        <div v-if="entries.availability == 0" class="border border-danger p-3" style="position: absolute; top: 45%; left: 30%; height: 150xp; width: 400px;">
                             <span class="display-4 text-danger text-uppercase" style="font-weight: bold">
                                 DEACTIVATED
                             </span>
                         </div>
 
-                        <img class="img-responsive rounded-circle mx-auto" :class="{ 'deactived-img' : barrier.availability == 0 || barrier.plate_availability == 0 }" style="height: 450px; width: auto;" :src="'/storage/' + barrier.avatar" align="middle">
-                    
+                        <img v-if="entries.avatar" class="img-responsive rounded-circle mx-auto" :class="{ 'deactived-img' : entries.availability == 0 }" style="height: 450px; width: auto;" :src="'/storage/' + entries.avatar" align="middle">                    
 
                     </div>
                     <div class="col-sm-6 p-0 border border-top-0 border-right-0 border-bottom-0">
 
 
-                        <ul class="list-group list-group-flush" :class="{ 'text-muted' : barrier.availability == 0 }">
+                        <ul class="list-group list-group-flush" :class="{ 'text-muted' : entries.availability == 0 }">
 
-                            <li class="list-group-item" :class="{ 'list-group-item-danger' : barrier.availability != 1, 'list-group-item-warning' : barrier.plate_availability != 1  }">
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !entries.availability  }">
                                 <small class="text-muted">DRIVER NAME:</small><br/>
                                 <span style="font-size: 35px;">
-                                {{barrier.driver}}
+                                {{entries.driver_name}}
                                 </span>
                             </li>
-                            <li class="list-group-item" :class="{ 'list-group-item-danger' : barrier.availability != 1, 'list-group-item-warning' : barrier.plate_availability != 1  }">
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !entries.availability  }">
                                 <small class="text-muted">PLATE NUMBER:</small><br/>
                                 <span style="font-size: 35px;">
-                                    {{barrier.plate_number}}
+                                    {{entries.plate_number}}
                                 </span>
                             </li>
-                            <li class="list-group-item" :class="{ 'list-group-item-danger' : barrier.availability != 1, 'list-group-item-warning' : barrier.plate_availability != 1  }">
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !entries.availability  }">
                                 <small class="text-muted">HAULER NAME:</small><br/>
                                 <span style="font-size: 35px;">
-                                    {{barrier.hauler_name}}
+                                    {{entries.hauler_name}}
                                 </span>
                             </li>
-                            <li class="list-group-item" :class="{ 'list-group-item-danger' : barrier.availability != 1, 'list-group-item-warning' : barrier.plate_availability != 1  }">
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !entries.availability  }">
                                 <small class="text-muted">PLANT IN:</small><br/>
-                                <span style="font-size: 35px;" v-if="barrier.inLocalTime">
-                                    {{ moment(barrier.inLocalTime.date)}} 
-                                </span>
-
-                                <span style="font-size: 35px;" v-else>
-                                    NO IN  
+                                <span style="font-size: 35px;">
+                                    {{ moment(entries.LocalTime)}} 
                                 </span>
                             </li>
 
-                           
-
-                              <li class="list-group-item"  v-show="barrier.isNowShipped" :class="{ 'list-group-item-danger' : barrier.availability != 1}">
+                              <li class="list-group-item"  v-if="entries.shipment_number" :class="{ 'list-group-item-danger' : entries.availability != 1}">
                                  <small class="text-muted">SHIPMENT NUMBER:</small><br/>
                                   <span class="text-success" style="font-size: 40px;">
-                                    SHIPMENT ASSIGNED - {{ barrier.isNowShipped }}
+                                    SHIPMENT ASSIGNED - {{ entries.shipment_number }}
                                  </span>
                             </li>
-
-                             <li class="list-group-item list-group-item-info" v-if="isFromLapaz == 1">
-                                <span class="text-dark text-uppercase" style="font-size: 40px;">Already Tapped from lapaz</span>
-                            </li>
+                            
                         </ul>
            
            
@@ -74,7 +65,71 @@
 
                  </li>
 
+
+            <li v-if="entries.length == 0" class="rounded-0 list-group-item pb-0 pt-0 rounded-0">
+
+                <div class="row">
+                    <div class="col-sm-6 p-3 text-center">
+                    <i  class="fa fa-circle text-warning float-left"></i>
+
+                        <div v-if="emptyEntry.availability == 0" class="border border-danger p-3" style="position: absolute; top: 45%; left: 30%; height: 150xp; width: 400px;">
+                            <span class="display-4 text-danger text-uppercase" style="font-weight: bold">
+                                DEACTIVATED
+                            </span>
+                        </div>
+
+                        <img v-if="emptyEntry.avatar" class="img-responsive rounded-circle mx-auto" :class="{ 'deactived-img' : emptyEntry.availability == 0 }" style="height: 450px; width: auto;" :src="'/storage/' + emptyEntry.avatar" align="middle">                    
+
+                    </div>
+                    <div class="col-sm-6 p-0 border border-top-0 border-right-0 border-bottom-0">
+
+
+                        <ul class="list-group list-group-flush" :class="{ 'text-muted' : emptyEntry.availability == 0 }">
+
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !emptyEntry.availability  }">
+                                <small class="text-muted">DRIVER NAME:</small><br/>
+                                <span style="font-size: 35px;">
+                                {{emptyEntry.driver_name}}
+                                </span>
+                            </li>
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !emptyEntry.availability  }">
+                                <small class="text-muted">PLATE NUMBER:</small><br/>
+                                <span style="font-size: 35px;">
+                                    {{emptyEntry.plate_number}}
+                                </span>
+                            </li>
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !emptyEntry.availability  }">
+                                <small class="text-muted">HAULER NAME:</small><br/>
+                                <span style="font-size: 35px;">
+                                    {{emptyEntry.hauler_name}}
+                                </span>
+                            </li>
+                            <li class="list-group-item" :class="{ 'list-group-item-danger' : !emptyEntry.availability  }">
+                                <small class="text-muted">PLANT IN:</small><br/>
+                                <span style="font-size: 35px;">
+                                    {{ moment(emptyEntry.LocalTime)}} 
+                                </span>
+                            </li>
+
+                              <li class="list-group-item"  v-if="emptyEntry.shipment_number" :class="{ 'list-group-item-danger' : emptyEntry.availability != 1}">
+                                 <small class="text-muted">SHIPMENT NUMBER:</small><br/>
+                                  <span class="text-success" style="font-size: 40px;">
+                                    SHIPMENT ASSIGNED - {{ emptyEntry.shipment_number }}
+                                 </span>
+                            </li>
+                            
+                        </ul>
+           
+           
+                    </div>
+                </div><!--end row -->
+
+                 </li>
+
+
                     </ul>
+
+
                 </div>
         </div>
 
@@ -84,31 +139,44 @@
     import moment from 'moment';
 
     export default {
+        props: ['driverqueue'],
         data() {
             return {
                 entries: [],
-                // currentTrucks: []
+                emptyEntry: [],
             }
         },
 
         created() {
-            this.getEntries()
-            // this.getTruckInPlant()
+
+            this.storeEntries()        
+            this.emptyPushed()
+            this.lastEntry()
+
         },
 
         methods: {
-            getEntries () {
-                axios.get('/manilaAPI')
-                .then(response => this.entries = response.data);
 
-                setTimeout(this.getEntries, 2000);
+            storeEntries() {
+                axios.get('/storeGateEntries/'+this.driverqueue)
+                .catch((error) => {
+                    console.log(error);
+                });
+                setTimeout(this.storeEntries, 2000);
             },
 
-            // getTruckInPlant () {
-            //     axios.get('/getTotalTrucksInPlant')
-            //     .then(response => this.currentTrucks = response.data);
-            //     setTimeout(this.getTruckInPlant, 3000);
-            // },
+            emptyPushed() {
+                axios.get('/getLastGateEntry/' + this.driverqueue)
+                .then(response => this.emptyEntry = response.data);
+            },
+
+            lastEntry() {
+                Echo.channel('gate.'+ this.driverqueue)
+                .listen('GateEntryEvent', (e) => {
+                    this.entries = e.gateEntry;
+                    // console.log(this.entries);
+                });
+            },
 
             moment(date) {
                 return moment(date).format('MMMM D, Y h:m:s A');

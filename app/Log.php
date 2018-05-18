@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Cardholder;
 use App\Driverqueue;
+use App\Shipment;
 
 class Log extends Model
 {
@@ -20,8 +21,8 @@ class Log extends Model
         'CardBits',
         'CardCode',
         'CardType',
-        'DoorID',
         'Invalid',
+        'SystemTime',
     ];
     
     public function getDates()
@@ -51,6 +52,17 @@ class Log extends Model
     public function getDriverAttribute()
     {
         return $this->driver()->first();
+    }
+
+    public function shipment() 
+    {
+        return $this->hasMany('App\Shipment','CardholderID','CardholderID')
+                     ->whereDate('created_at',Carbon::today());
+    }
+
+    public function getShipmentAttribute()
+    {
+        return $this->shipment()->first();
     }
 
     public function lineups()

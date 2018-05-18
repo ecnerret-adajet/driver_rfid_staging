@@ -74,7 +74,7 @@ class LineupApiController extends Controller
         $check_truckscale_in = Log::barrierLocation($queue->gate->door,$queue->gate->controller); // return pluck, all truckscale In
 
         // if driver has oustanding DR
-        $plate = $checkLastDriver->first()->drivers->first()->truck->platenum_format;
+        $plate = $checkLastDriver->first()->driver->truck->platenum_format;
         $outstandingDR = DB::connection('dr_fp_database')
                         ->select("CALL P_LAST_TRIP('$plate','deploy')");
 
@@ -87,9 +87,8 @@ class LineupApiController extends Controller
         // $checkTapComplete = Log::whereIn('CardholderID',$tapComplete)->lastDriver($queue->door,$queue->controller);         
 
         // Check if driver or truck is deactivated
-        $isDriverActivated = $checkLastDriver->first()->drivers->first()->availability;
-        $isTruckActivated = $checkLastDriver->first()->drivers->first()->truck->availability;
-
+        $isDriverActivated = $checkLastDriver->first()->driver->availability;
+        $isTruckActivated = $checkLastDriver->first()->driver->truck->availability;
 
         if(count($outstandingDR) == 0) {
             return array(

@@ -14,12 +14,12 @@
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+// Group Auth API
+Route::middleware('auth:api')->group(function() {
+    // Making sure user is logged inorder to user the API endpoints
 });
-
-// API setup for Hauler Online
-
-
-
-// API setup for Pickup Online

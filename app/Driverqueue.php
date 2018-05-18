@@ -13,6 +13,15 @@ class Driverqueue extends Model
         'ts_out_controller'
     ];
 
+    protected $visible = [
+        'id',
+        'title',
+        'door',
+        'controller',
+        'gate_id',
+        'ts_out_controller'
+    ];
+
     protected $dates = [
         'deleted_at'
     ];

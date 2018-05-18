@@ -15,6 +15,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
 Vue.component('example', require('./components/Example.vue'));
 Vue.component('drivers', require('./components/Drivers.vue'));
 Vue.component('trucks', require('./components/Trucks.vue'));
@@ -63,7 +64,7 @@ Vue.component('driverqueue', require('./components/MonitorQueue.vue'));
 Vue.component('gateEntries', require('./components/GateEntries.vue'));
 Vue.component('driverqueueEntries', require('./components/QueuesEntries.vue'));
 
-
+Vue.component('gateArea', require('./components/GateArea.vue'));
 
 const app = new Vue({
     el: '#app'
