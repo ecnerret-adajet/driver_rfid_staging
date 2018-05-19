@@ -56686,33 +56686,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
 
         this.storeEntries();
-        this.lastEntry();
+        // this.lastEntry()
         this.emptyPushed();
     },
 
 
     methods: {
         storeEntries: function storeEntries() {
-            axios.get('/storeGateEntries/' + this.driverqueue).catch(function (error) {
+            var _this = this;
+
+            axios.post('/storeGateEntries/' + this.driverqueue).then(function (response) {
+                return _this.entries = response.data;
+            }).catch(function (error) {
                 console.log(error);
             });
             setTimeout(this.storeEntries, 2000);
         },
         emptyPushed: function emptyPushed() {
-            var _this = this;
-
-            axios.get('/getLastGateEntry/' + this.driverqueue).then(function (response) {
-                return _this.emptyEntry = response.data;
-            });
-        },
-        lastEntry: function lastEntry() {
             var _this2 = this;
 
-            Echo.channel('gate.' + this.driverqueue).listen('GateEntryEvent', function (e) {
-                _this2.entries = e.gateEntry;
-                // console.log(this.entries);
+            axios.get('/getLastGateEntry/' + this.driverqueue).then(function (response) {
+                return _this2.emptyEntry = response.data;
             });
         },
+
+
+        // lastEntry() {
+        //     Echo.channel('gate.'+ this.driverqueue)
+        //     .listen('GateEntryEvent', (e) => {
+        //         this.entries = e.gateEntry;
+        //         // console.log(this.entries);
+        //     });
+        // },
+
         moment: function moment(date) {
             return __WEBPACK_IMPORTED_MODULE_0_moment___default()(date).format('MMMM D, Y h:m:s A');
         }
@@ -98404,7 +98410,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "font-size": "35px"
     }
-  }, [_vm._v("\r\n                " + _vm._s(_vm.moment(_vm.entries.LocalTime)) + " \r\n            ")])]), _vm._v(" "), _c('td', [(_vm.entries.shipment_number) ? _c('span', {
+  }, [_vm._v("\r\n                " + _vm._s(_vm.moment(_vm.entries.LocalTime.date)) + " \r\n            ")])]), _vm._v(" "), _c('td', [(_vm.entries.shipment_number) ? _c('span', {
     staticStyle: {
       "font-size": "40px"
     }
@@ -98491,7 +98497,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticStyle: {
       "font-size": "35px"
     }
-  }, [_vm._v("\r\n                " + _vm._s(_vm.moment(_vm.emptyEntry.LocalTime)) + " \r\n            ")])]), _vm._v(" "), _c('td', [(_vm.emptyEntry.shipment_number) ? _c('span', {
+  }, [_vm._v("\r\n                " + _vm._s(_vm.moment(_vm.emptyEntry.LocalTime.date)) + " \r\n            ")])]), _vm._v(" "), _c('td', [(_vm.emptyEntry.shipment_number) ? _c('span', {
     staticStyle: {
       "font-size": "40px"
     }

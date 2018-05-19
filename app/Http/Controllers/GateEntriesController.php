@@ -80,12 +80,14 @@ class GateEntriesController extends Controller
             ]
         );
 
-        if($gateEntry->wasRecentlyCreated == true) {
-            event(new GateEntryEvent($gateEntry,$driverLocation));
-            return 'new pushed data';
-        } else {
-            return 'no pushed data';
-        }
+        return $gateEntry;
+
+        // if($gateEntry->wasRecentlyCreated == true) {
+        //     event(new GateEntryEvent($gateEntry,$driverLocation));
+        //     return 'new pushed data';
+        // } else {
+        //     return 'no pushed data';
+        // }
 
     }
 

@@ -87,7 +87,7 @@ Route::get('/getLastDriverBtn','LineupApiController@getBtnLastDriver');
 /**
  *  Gate Entries Route Setup w/ Realtime pusher
  */
-Route::get('/storeGateEntries/{driverqueue_id}','GateEntriesController@storeGateEntries');
+Route::post('/storeGateEntries/{driverqueue_id}','GateEntriesController@storeGateEntries');
 Route::get('/getLastGateEntry/{driverqueue_id}','GateEntriesController@getLastGateEntry');
 Route::get('/gateEntry/{driverqueue}','GateEntriesController@gateEntry');
 

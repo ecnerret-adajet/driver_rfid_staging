@@ -56,7 +56,7 @@
       <tr>
         <td width="50%">
             <span style="font-size: 35px;">
-                {{ moment(entries.LocalTime)}} 
+                {{ moment(entries.LocalTime.date) }} 
             </span>
         </td>
         <td>
@@ -156,7 +156,7 @@
       <tr>
         <td width="50%">
             <span style="font-size: 35px;">
-                {{ moment(emptyEntry.LocalTime)}} 
+                {{ moment(emptyEntry.LocalTime.date)}} 
             </span>
         </td>
         <td>
@@ -219,7 +219,7 @@
         created() {
 
             this.storeEntries()
-            this.lastEntry()
+            // this.lastEntry()
             this.emptyPushed()
         
         },
@@ -227,7 +227,8 @@
         methods: {
 
             storeEntries() {
-                axios.get('/storeGateEntries/'+this.driverqueue)
+                axios.post('/storeGateEntries/'+this.driverqueue)
+                .then(response => this.entries = response.data)
                 .catch((error) => {
                     console.log(error);
                 });
@@ -239,13 +240,13 @@
                 .then(response => this.emptyEntry = response.data);
             },
 
-            lastEntry() {
-                Echo.channel('gate.'+ this.driverqueue)
-                .listen('GateEntryEvent', (e) => {
-                    this.entries = e.gateEntry;
-                    // console.log(this.entries);
-                });
-            },
+            // lastEntry() {
+            //     Echo.channel('gate.'+ this.driverqueue)
+            //     .listen('GateEntryEvent', (e) => {
+            //         this.entries = e.gateEntry;
+            //         // console.log(this.entries);
+            //     });
+            // },
 
             moment(date) {
                 return moment(date).format('MMMM D, Y h:m:s A');
