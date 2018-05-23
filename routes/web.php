@@ -91,6 +91,13 @@ Route::post('/storeGateEntries/{driverqueue_id}','GateEntriesController@storeGat
 Route::get('/getLastGateEntry/{driverqueue_id}','GateEntriesController@getLastGateEntry');
 Route::get('/gateEntry/{driverqueue}','GateEntriesController@gateEntry');
 
+/**
+ * Queue Entries Route Setup
+ */
+Route::post('/storeQueueEntries/{driverqueue_id}','QueueEntriesController@storeQueueEntries');
+Route::get('/getQueueEntries/{driverqueue_id}','QueueEntriesController@getQueueEntries');
+Route::get('/queueEntry/{driverqueue}','QueueEntriesController@queueEntry');
+ 
 Auth::routes();
 
 /**
@@ -98,7 +105,7 @@ Auth::routes();
  */
 Route::group(['middleware' => 'auth'], function () {
 
-    //Test Endpoint
+//Test Endpoint
 Route::get('/processGateEntries','GateEntriesController@processGateEntries');
 
     

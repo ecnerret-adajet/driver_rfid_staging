@@ -17,27 +17,27 @@ class ShipmentsController extends Controller
         //Get all drivers from location
         $located_serves = Shipment::where('ControllerID', $driverqueue->controller)
                             ->where('DoorID',$driverqueue->door)
-                            ->whereDate('created_at',Carbon::today())
-                            ->pluck('CardholderID');
+                            ->whereDate('created_at','>=', Carbon::now()->subDay())
+                            ->pluck('CardholderID')
+                            ->unique();
 
         // get the cardholder with time out
-        $log = Log::whereIn('CardholderID',$located_serves)
-                ->whereDate('LocalTime',Carbon::today())
+        $log = Log::whereIn('CardholderID',$located_serves->values()->all())
+                ->whereDate('LocalTime','>=', Carbon::now()->subDay())
                 ->where('Direction',2) 
-                ->pluck('CardholderID');
-
-        // Get only unique cardholder
-        $get_unique_log = $log->unique('CardholderID');
+                ->pluck('CardholderID')
+                ->unique();
         
         $served = Shipment::with('driver','driver.truck','driver.hauler','driver.image')
-                        ->whereDate('created_at',Carbon::today())
+                        ->whereDate('created_at','>=', Carbon::now()->subDay())
                         ->where('ControllerID', $driverqueue->controller)
                         ->where('DoorID',$driverqueue->door)
-                        ->whereNotIn('CardholderID',$get_unique_log)
+                        ->whereNotIn('CardholderID',$log->values()->all())
                         ->orderBy('id','DESC')
-                        ->get();
+                        ->get()
+                        ->unique('CardholderID');
 
-        return $served;
+        return $served->values()->all();
 
     }
 

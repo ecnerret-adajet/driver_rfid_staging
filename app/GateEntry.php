@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class GateEntry extends Model
 {
@@ -47,6 +48,16 @@ class GateEntry extends Model
 
     public function driverqueue() {
         return $this->belongsTo(Driverqueue::class);
+    }
+
+    // Query Scope
+
+    public function scopeCheckIfTappedFromGate($query, $CardholderID) 
+    {
+        //should DRIVER THAT TAP less 3 hours from gate RFID
+        return $query->where('CardholderID', $CardholderID)
+                    ->where('LocalTime', '>',  Carbon::now()->subHours(3)->toDateTimeString())
+                    ->first(); 
     }
 
 }
