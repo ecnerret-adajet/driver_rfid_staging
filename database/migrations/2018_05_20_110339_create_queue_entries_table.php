@@ -16,11 +16,11 @@ class CreateQueueEntriesTable extends Migration
         Schema::create('queue_entries', function (Blueprint $table) {
             $table->increments('id');
             $table->string('queue_number');
-            $table->integer('truck_id')->unsigned();
-            $table->string('driver_name');
+            $table->integer('truck_id')->unsigned()->nullable();
+            $table->string('driver_name')->nullable();
             $table->string('avatar')->default('drivers/avatar.png');
-            $table->string('plate_number');
-            $table->string('hauler_name');
+            $table->string('plate_number')->nullable();
+            $table->string('hauler_name')->nullable();;
             $table->integer('driverqueue_id')->unsigned();
 
             $table->string('shipment_number')->nullable();

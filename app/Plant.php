@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plant extends Model
 {
+    protected $visible = [
+        'plant_name'
+    ];
+
     public function truck()
     {
         return $this->hasOne('App\Truck');

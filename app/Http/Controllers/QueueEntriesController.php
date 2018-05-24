@@ -32,18 +32,54 @@ class QueueEntriesController extends Controller
     {   
         $checkTruckscaleOut = collect(Log::truckscaleOutFromQueue($driverqueue_id))->unique();
 
-        $queues = QueueEntry::with('driver','driver.image','truck','hauler')
+        $queues = QueueEntry::where('driverqueue_id',$driverqueue_id)
+                            ->whereNotIn('CardholderID',$checkTruckscaleOut->values()->all())
+                            ->whereNull('shipment_number')
+                            ->whereNotNull('driver_availability')
+                            ->whereNotNull('truck_availability')
+                            ->where('isDRCompleted','NOT LIKE','%0000-00-00%')
+                            ->whereNotNull('isTappedGateFirst')
+                            ->orderBy('LocalTime','ASC')
+                            ->get()
+                            ->unique('CardholderID');
+ 
+        return $queues->values()->all();
+    }
+
+    // Show all queue to feed planner's monitoring
+    public function getQueueEntriesFeed($driverqueue_id) 
+    {
+        $checkTruckscaleOut = collect(Log::truckscaleOutFromQueue($driverqueue_id))->unique();
+
+        $queues = QueueEntry::with('truck','truck.plants','truck.capacity')
                             ->where('driverqueue_id',$driverqueue_id)
                             ->whereNotIn('CardholderID',$checkTruckscaleOut->values()->all())
                             ->whereNotNull('driver_availability')
                             ->whereNotNull('truck_availability')
                             ->where('isDRCompleted','NOT LIKE','%0000-00-00%')
                             ->whereNotNull('isTappedGateFirst')
-                            ->orderBy('LocalTime','DESC')
+                            ->orderBy('LocalTime','ASC')
                             ->get()
                             ->unique('CardholderID');
- 
+
         return $queues->values()->all();
+    }
+
+    //Count Queue Statuses
+    public function getQueueStatus($driverqueue)
+    {
+        $totalAssigned = QueueEntry::totalAssigned($driverqueue)->count();
+        $totalOpen = QueueEntry::totalOpen($driverqueue)->count();
+        $current_in_plant = count($this->getQueueEntriesFeed($driverqueue));
+
+        $data = array(
+            'totalAssigned' => $totalAssigned,
+            'totalOpen' => $totalOpen,
+            'current_in_plant' => $totalOpen
+        );
+
+        return $data;
+
     }
 
     // Store new queue entry
@@ -59,11 +95,17 @@ class QueueEntriesController extends Controller
                         ->orderBy('LocalTime','DESC')
                         ->with('driver','driver.image','driver.truck','driver.hauler','shipment')
                         ->first();
-        
-        $totalEntry = QueueEntry::whereDate('created_at',Carbon::today())->where('driverqueue_id',$driverLocation->id)->count();         
-        
+                                
         $queueEntry = QueueEntry::updateOrCreate(
             [
+                'CardholderID' => $lastLogEntry->CardholderID,
+                'driver_name' => $lastLogEntry->driver->name,
+                'plate_number' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->plate_number : null,
+                'hauler_name' => !empty($lastLogEntry->driver->hauler) ? $lastLogEntry->driver->hauler->name : null,
+                
+            ],
+            [
+                'queue_number' =>  $this->checkIfExist($driverLocation->id) <= 1 ? 1 : $this->checkIfExist($driverLocation->id),
                 'shipment_number' => Shipment::checkIfShipped($lastLogEntry->CardholderID,null)->first(),
                 'isDRCompleted' =>  !empty($lastLogEntry->driver->truck) ? Truck::callLastTrip($lastLogEntry->driver->truck->plate_number) : null,
                 'isTappedGateFirst' => !empty(GateEntry::checkIfTappedFromGate($lastLogEntry->CardholderID)) ? 1 : null,
@@ -71,21 +113,13 @@ class QueueEntriesController extends Controller
                 'driver_availability' => !empty($lastLogEntry->driver) && $lastLogEntry->driver->availability == 1 ? 1 : null,
                 'truck_availability' => !empty($lastLogEntry->driver->truck) && $lastLogEntry->driver->truck->availability == 1 ? 1 : null,
                 'isShipmentStarted' => 0,
-            ],
-            [
-                'queue_number' =>  $this->checkIfExist($driverLocation->id) == 0 ? 1 : $this->checkIfExist($driverLocation->id) + 1,
-                'LogID' => $lastLogEntry->LogID,
-                'CardholderID' => $lastLogEntry->CardholderID,
-                'driver_name' => $lastLogEntry->driver->name,
-                'plate_number' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->plate_number : null,
+                'LogID' => $lastLogEntry->LogID,   
                 'truck_id' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->id : null,
                 'avatar' => !empty($lastLogEntry->driver->image) ? $lastLogEntry->driver->image->avatar : $lastLogEntry->driver->avatar,
-                'hauler_name' => !empty($lastLogEntry->driver->hauler) ? $lastLogEntry->driver->hauler->name : null,
                 'driverqueue_id' => $driverLocation->id,
                 'LocalTime' => $lastLogEntry->LocalTime,
             ]
         );
-
 
         if($queueEntry->wasRecentlyCreated == true) {
 
@@ -98,6 +132,7 @@ class QueueEntriesController extends Controller
             return $queueEntry;
 
         }
+
                      
     }
 
@@ -105,6 +140,14 @@ class QueueEntriesController extends Controller
     public function queueEntry(Driverqueue $driverqueue)
     {
         return view('queueEntries.show',compact('driverqueue'));
+    }
+
+    //Display queue from planners monitoring
+    public function queueEntryFeed()
+    {
+        $driverqueues = Driverqueue::all();
+
+        return view('queueEntries.index',compact('driverqueues'));
     }
 
 

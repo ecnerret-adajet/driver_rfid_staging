@@ -66,6 +66,7 @@ Vue.component('driverqueueEntries', require('./components/QueuesEntries.vue'));
 
 Vue.component('gateArea', require('./components/GateArea.vue'));
 Vue.component('queueArea', require('./components/QueueArea.vue'));
+Vue.component('queueParent', require('./components/QueueParent.vue'));
 
 const app = new Vue({
     el: '#app'

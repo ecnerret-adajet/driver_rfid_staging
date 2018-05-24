@@ -8,6 +8,7 @@
             <th scope="col"> <small>  Queue # </small> </th>
             <th scope="col"> <small>  Driver Details </small> </th>
             <th scope="col"> <small>  Capacity </small> </th>
+            <th scope="col"> <small>  Truck Location(s) </small> </th>
             <th scope="col"> <small>  Recorded Time /Date </small> </th>
             <th scope="col"> <small>  Status</small> </th>
             </tr>
@@ -18,58 +19,73 @@
 
                 <td class="text-center">
                     <span class="display-4">
-                     {{ queue.log_id }}
+                     {{ queue.queue_number }}
                     </span> 
                 </td>
                 <td>
                     <div class="row">
                         <div class="col-3">
-                            <img :src="avatar_link + queue.driver_avatar" class="rounded-circle mx-auto align-middle" style="height: 100px; width: auto;"  align="middle">
+                            <img :src="avatar_link + queue.avatar" class="rounded-circle mx-auto align-middle" style="height: 100px; width: auto;"  align="middle">
                         </div>
                         <div class="col-9">
                             {{ queue.driver_name }} <br/>
-                            {{ queue.plate_number }} <br/>
-                            <span v-if="queue.hauler == 'NO HAULER'" class="text-danger">
-                                    {{ queue.hauler }}
+                            <span v-if="queue.plate_number">
+                                {{ queue.plate_number }} <br/>
                             </span>
-                            <span v-else>
-                                    {{ queue.hauler }}
+                            <span v-else class="text-danger">
+                                NO TRUCK
+                            </span>
+                            <span v-if="queue.hauler_name">
+                                {{ queue.hauler_name }}
+                            </span>
+                            <span class="text-danger" v-else>
+                                NO HAULER
                             </span>
                         </div>
                     </div>
                    
                 </td>
-                <td>
-                    <span v-if="queue.capacity">
-                        {{ queue.capacity }} 
+                 <td width="7%">
+                    <span v-if="queue.truck.capacity">
+                        {{ queue.truck.capacity.description }} 
                     </span>
-                    <span class="text-muted" v-if="!queue.capacity">
+                    <span v-else class="text-muted">
                         N/A
                     </span>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="col" v-for="(i, index) in Math.ceil(queue.truck.plants.length / 4)" :key="index">
+                            <span v-for="(x,y) in queue.truck.plants.slice((i - 1) * 4, i *4)" :key="y">
+                                <span class="badge badge-secondary m-1">
+                                    {{ x.plant_name }}
+                                </span><br/>
+                            </span>
+                        </div>
+                    </div>
                 </td>
                 <td>
                     <small class="text-uppercase text-muted">
                         LAST DR SUBMISSION
                     </small> <br/>
-                    <span v-if="queue.dr_status" v-for="(status, index) in queue.dr_status">
-                        <span v-if="index == 0">
-                            {{ status.submission_date }}
-                        </span>                                            
-                    </span> <br/>
+                        {{ queue.isDRCompleted }}
+                        <br/>
                     <small class="text-uppercase text-muted">
                         TAPPED IN QUEUE
                     </small><br/>
-                     {{ moment(queue.log_time.date) }}
+                     {{ moment(queue.LocalTime) }}
                 </td>
                 <td>
-                    <span v-if="!queue.on_serving">
-                        <button class="btn btn-outline-success btn-sm disabled">
-                        OPEN FOR SHIPMENT
+                    <span class="text-center" v-if="queue.shipment_number">
+                        <button class="btn btn-outline-danger btn-sm disabled">
+                            SHIPMENT ASSIGNED 
                         </button>
+                        <br/>
+                         {{ queue.shipment_number }}
                     </span>
                     <span v-else>
-                        <button class="btn btn-outline-danger btn-sm disabled">
-                        SHIPMENT ASSIGNED
+                        <button class="btn btn-outline-success btn-sm disabled">
+                            OPEN FOR SHIPMENT
                         </button>
                     </span>
                 </td>
@@ -135,7 +151,7 @@
 
     export default {
 
-        props: ['queue_id','searchString'],
+        props: ['location','search'],
 
         components: {
             VueContentPlaceholders,
@@ -156,9 +172,10 @@
         },
 
         methods: {
+            
             getEntries() {
                 this.loading = true
-                axios.get('/getQueueEntries/' + this.queue_id)
+                axios.get('/getQueueEntriesFeed/' + this.location)
                 .then(response => {
                     this.queues = response.data
                     this.loading = false
@@ -190,7 +207,8 @@
             filteredEntries() {
                 const vm = this;
                 return _.filter(vm.queues, function(item){
-                    return ~item.driver.name.toLowerCase().indexOf(vm.searchString.trim().toLowerCase());
+                    return ~item.driver_name.toLowerCase().indexOf(vm.search.trim().toLowerCase()) || 
+                            ~item.plate_number.toLowerCase().indexOf(vm.search.trim().toLowerCase());
                 });
             },
 

@@ -96,6 +96,8 @@ Route::get('/gateEntry/{driverqueue}','GateEntriesController@gateEntry');
  */
 Route::post('/storeQueueEntries/{driverqueue_id}','QueueEntriesController@storeQueueEntries');
 Route::get('/getQueueEntries/{driverqueue_id}','QueueEntriesController@getQueueEntries');
+
+
 Route::get('/queueEntry/{driverqueue}','QueueEntriesController@queueEntry');
  
 Auth::routes();
@@ -107,6 +109,13 @@ Route::group(['middleware' => 'auth'], function () {
 
 //Test Endpoint
 Route::get('/processGateEntries','GateEntriesController@processGateEntries');
+
+/**
+ * Queue Entries Setting Route
+ */
+Route::get('/getQueueEntriesFeed/{driverqueue_id}','QueueEntriesController@getQueueEntriesFeed');
+Route::get('/queueEntryFeed','QueueEntriesController@queueEntryFeed');
+Route::get('/getQueueStatus/{driverqueue}','QueueEntriesController@getQueueStatus');
 
     
 Route::get('/home', 'HomeController@index')->name('home');

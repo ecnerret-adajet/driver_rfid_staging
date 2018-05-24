@@ -56,7 +56,7 @@ class GateEntry extends Model
     {
         //should DRIVER THAT TAP less 3 hours from gate RFID
         return $query->where('CardholderID', $CardholderID)
-                    ->where('LocalTime', '>',  Carbon::now()->subHours(3)->toDateTimeString())
+                    ->where('LocalTime', '>=',  Carbon::today()->subHours(3)->toDateTimeString())
                     ->first(); 
     }
 

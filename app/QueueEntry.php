@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class QueueEntry extends Model
 {
@@ -42,19 +43,10 @@ class QueueEntry extends Model
     }
 
     // Relationships Model
-
-    public function driver() {
-        return $this->belongsTo(Driver::class);
-    }
-
     public function truck() {
         return $this->belongsTo(Truck::class);
     }
-
-    public function hauler() {
-        return $this->belongsTo(Hauler::class);
-    }
-
+    
     public function shipment() {
         return $this->belongsTo(Shipment::class,'shipment_number','shipment_number');
     }
@@ -73,6 +65,23 @@ class QueueEntry extends Model
 
     public function gateEntry() {
         return $this->belongsTo(GateEntry::class);
+    }
+
+    //Query Scoped
+    public function scopeTotalAssigned($query, $driverqueue)
+    {
+        return $query->whereDate('created_at',Carbon::today())
+                    ->where('driverqueue_id',$driverqueue)
+                    ->whereNotNull('shipment_number')
+                    ->get();
+    }
+
+    public function scopeTotalOpen($query, $driverqueue)
+    {
+        return $query->whereDate('created_at',Carbon::today())
+                    ->where('driverqueue_id',$driverqueue)
+                    ->whereNull('shipment_number')
+                    ->get();
     }
 
 

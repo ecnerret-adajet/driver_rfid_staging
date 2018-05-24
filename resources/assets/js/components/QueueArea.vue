@@ -231,7 +231,7 @@
                                 QUEUE TIME:
                             </span>
                             <p class="p-0 m-0">
-                                {{ moment(lastDriver.LocalTime) }}
+                                {{ moment(lastDriver.LocalTime.date) }}
                             </p>
                         </td>
                     </tr>
@@ -281,8 +281,8 @@
         },
 
         created() {
-            this.getQueues()
             this.pushToQueue()
+            this.getQueues()
             this.getTodayServed()
             this.getLastDriver()
         },
@@ -297,7 +297,7 @@
             pushToQueue() {
                 Echo.channel('queue.'+ this.driverqueue)
                 .listen('QueueEntryEvent', (e) => {
-                    this.queues.unshift(e.queueEntry);
+                    this.queues.push(e.queueEntry);
                     console.log(e.queueEntry);
                 });
             },
@@ -342,7 +342,12 @@
                 else if (!lastDriver.isTappedGateFirst) {
                     driverStatus.alertMessage = "Tap first from main gate RFID";
                     driverStatus.tableStyle = "table-danger";
-                } else {
+                } 
+                else if (lastDriver.shipment_number) {
+                    driverStatus.alertMessage = "Has now shipment assigned!";
+                    driverStatus.tableStyle ="table-primary";
+                }
+                else {
                     driverStatus.alertMessage = "Added to queue successfully!";
                     driverStatus.tableStyle ="table-success";
                 }
