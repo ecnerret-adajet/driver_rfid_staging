@@ -63940,7 +63940,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     created: function created() {
-        this.pushToQueue();
+        // this.pushToQueue()
         this.getQueues();
         this.getTodayServed();
         this.getLastDriver();
@@ -63956,27 +63956,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             setTimeout(this.storeEntries, 300000); // 5 minutes
         },
-        pushToQueue: function pushToQueue() {
+
+
+        // pushToQueue() {
+        //     Echo.channel('queue.'+ this.driverqueue)
+        //     .listen('QueueEntryEvent', (e) => {
+        //         this.queues.push(e.queueEntry);
+        //         console.log(e.queueEntry);
+        //     });
+        // },
+
+        getTodayServed: function getTodayServed() {
             var _this2 = this;
 
-            Echo.channel('queue.' + this.driverqueue).listen('QueueEntryEvent', function (e) {
-                _this2.queues.push(e.queueEntry);
-                console.log(e.queueEntry);
-            });
-        },
-        getTodayServed: function getTodayServed() {
-            var _this3 = this;
-
             axios.get('/servedToday/' + this.driverqueue).then(function (response) {
-                return _this3.todayServed = response.data;
+                return _this2.todayServed = response.data;
             });
             setTimeout(this.getTodayServed, 10000); // 10 seconds
         },
         getLastDriver: function getLastDriver() {
-            var _this4 = this;
+            var _this3 = this;
 
             axios.post('/storeQueueEntries/' + this.driverqueue).then(function (response) {
-                return _this4.lastDriver = response.data;
+                _this3.lastDriver = response.data;
+                _this3.queues.push(response.data);
             }).catch(function (error) {
                 console.log(error);
             });

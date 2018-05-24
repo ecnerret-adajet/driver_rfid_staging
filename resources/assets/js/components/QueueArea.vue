@@ -281,7 +281,7 @@
         },
 
         created() {
-            this.pushToQueue()
+            // this.pushToQueue()
             this.getQueues()
             this.getTodayServed()
             this.getLastDriver()
@@ -294,13 +294,13 @@
                 setTimeout(this.storeEntries, 300000); // 5 minutes
             },
 
-            pushToQueue() {
-                Echo.channel('queue.'+ this.driverqueue)
-                .listen('QueueEntryEvent', (e) => {
-                    this.queues.push(e.queueEntry);
-                    console.log(e.queueEntry);
-                });
-            },
+            // pushToQueue() {
+            //     Echo.channel('queue.'+ this.driverqueue)
+            //     .listen('QueueEntryEvent', (e) => {
+            //         this.queues.push(e.queueEntry);
+            //         console.log(e.queueEntry);
+            //     });
+            // },
 
             getTodayServed() {
                 axios.get('/servedToday/' + this.driverqueue) 
@@ -310,7 +310,10 @@
 
             getLastDriver() {
                 axios.post('/storeQueueEntries/' + this.driverqueue)
-                .then(response => this.lastDriver = response.data)
+                .then(response => {
+                    this.lastDriver = response.data
+                    this.queues.push(response.data)
+                })
                 .catch((error) => {
                     console.log(error);
                 });
