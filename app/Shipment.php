@@ -17,6 +17,7 @@ class Shipment extends Model
 
     protected $hidden = [
         'updated_at',
+        'company_server',
     ];
 
     public function getDates()

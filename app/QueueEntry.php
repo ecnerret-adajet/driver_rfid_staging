@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use DB;
 
 class QueueEntry extends Model
 {
@@ -42,13 +43,26 @@ class QueueEntry extends Model
         return [];
     }
 
+    // Attributes Function
+    public function setPlateNumberAttribute($value)
+    {
+        $this->attributes['plate_number'] = str_replace('_', '', $value);
+    }
+
     // Relationships Model
     public function truck() {
         return $this->belongsTo(Truck::class);
     }
     
     public function shipment() {
-        return $this->belongsTo(Shipment::class,'shipment_number','shipment_number');
+        return $this->belongsTo(Shipment::class,'CardholderID','CardholderID')
+                    ->whereDate('created_at',Carbon::parse($this->created_at));
+    }
+
+    public function todayShipment()
+    {
+        return $this->belongsTo(Shipment::class,'CardholderID','CardholderID')
+                    ->whereDate('created_at',Carbon::parse($this->created_at));
     }
 
     public function log() {
@@ -70,18 +84,28 @@ class QueueEntry extends Model
     //Query Scoped
     public function scopeTotalAssigned($query, $driverqueue)
     {
-        return $query->whereDate('created_at',Carbon::today())
+        return $query->with('shipment')
+                    ->whereDate('created_at',Carbon::today())
                     ->where('driverqueue_id',$driverqueue)
-                    ->whereNotNull('shipment_number')
-                    ->get();
+                    ->has('shipment')
+                    // ->whereNotNull('shipment_number')
+                    ->where('isDRCompleted','NOT LIKE','%0000-00-00%')
+                    ->get()
+                    ->unique('CardholderID');
     }
 
     public function scopeTotalOpen($query, $driverqueue)
     {
         return $query->whereDate('created_at',Carbon::today())
+                    ->doesntHave('shipment')
                     ->where('driverqueue_id',$driverqueue)
-                    ->whereNull('shipment_number')
-                    ->get();
+                    // ->whereNull('shipment_number')
+                    ->whereNotNull('driver_availability')
+                    ->whereNotNull('truck_availability')
+                    ->where('isDRCompleted','NOT LIKE','%0000-00-00%')
+                    ->whereNotNull('isTappedGateFirst')
+                    ->get()
+                    ->unique('CardholderID');
     }
 
 

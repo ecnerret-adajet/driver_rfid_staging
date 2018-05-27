@@ -291,7 +291,7 @@
             getQueues() {
                 axios.get('/getQueueEntries/' + this.driverqueue)
                 .then(response => this.queues = response.data)
-                setTimeout(this.storeEntries, 300000); // 5 minutes
+                setTimeout(this.storeEntries, 10000); // 10 seconds
             },
 
             // pushToQueue() {
@@ -305,15 +305,12 @@
             getTodayServed() {
                 axios.get('/servedToday/' + this.driverqueue) 
                 .then(response => this.todayServed = response.data);
-                setTimeout(this.getTodayServed, 10000); // 10 seconds
+                setTimeout(this.getTodayServed, 12000); // 10 seconds
             },
 
             getLastDriver() {
                 axios.post('/storeQueueEntries/' + this.driverqueue)
-                .then(response => {
-                    this.lastDriver = response.data
-                    this.queues.push(response.data)
-                })
+                .then(response => this.lastDriver = response.data)
                 .catch((error) => {
                     console.log(error);
                 });
@@ -339,7 +336,7 @@
                     driverStatus.tableStyle = "table-danger";
                 } 
                 else if (lastDriver.isDRCompleted == "0000-00-00") {
-                    driverStatus.alertMessage = "Please submit all outstanding DR first, in order to add in queue";
+                    driverStatus.alertMessage = "Please submit all outstanding DR first, then tap again!";
                     driverStatus.tableStyle = "table-danger";
                 }
                 else if (!lastDriver.isTappedGateFirst) {

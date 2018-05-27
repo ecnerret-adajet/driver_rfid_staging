@@ -151,7 +151,7 @@
 
     export default {
 
-        props: ['location','search'],
+        props: ['location','search','date'],
 
         components: {
             VueContentPlaceholders,
@@ -175,7 +175,7 @@
             
             getEntries() {
                 this.loading = true
-                axios.get('/getQueueEntriesFeed/' + this.location)
+                axios.get('/searchQueueEntriesFeed/' + this.location + '?search_date=' + this.date)
                 .then(response => {
                     this.queues = response.data
                     this.loading = false

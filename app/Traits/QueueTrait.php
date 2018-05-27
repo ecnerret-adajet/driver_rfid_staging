@@ -14,12 +14,13 @@ trait QueueTrait {
 
         $totalEntry = QueueEntry::whereDate('created_at',Carbon::today())
                         ->where('driverqueue_id',$driverqueue_id)
+                        ->doesntHave('shipment')
                         ->whereNotNull('driver_availability')
                         ->whereNotNull('truck_availability')
                         ->whereNotNull('isTappedGateFirst')
                         ->where('isDRCompleted', '!=' ,"0000-00-00")
                         ->pluck('CardholderID')
-                        ->unique()
+                        ->unique('CardholderID')
                         ->count();
     
         return $totalEntry;
