@@ -305,7 +305,7 @@
             getTodayServed() {
                 axios.get('/servedToday/' + this.driverqueue) 
                 .then(response => this.todayServed = response.data);
-                setTimeout(this.getTodayServed, 12000); // 10 seconds
+                setTimeout(this.getTodayServed, 12000); // 12 seconds
             },
 
             getLastDriver() {

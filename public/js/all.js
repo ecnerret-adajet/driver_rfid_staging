@@ -63972,7 +63972,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/servedToday/' + this.driverqueue).then(function (response) {
                 return _this2.todayServed = response.data;
             });
-            setTimeout(this.getTodayServed, 12000); // 10 seconds
+            setTimeout(this.getTodayServed, 12000); // 12 seconds
         },
         getLastDriver: function getLastDriver() {
             var _this3 = this;

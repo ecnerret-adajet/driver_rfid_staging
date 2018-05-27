@@ -163,12 +163,14 @@ class QueueEntriesController extends Controller
                 ]
             );
             
-            if($queueEntry->wasRecentlyCreated == true) {
-                event(new QueueEntryEvent($queueEntry,$driverLocation));
-                return $queueEntry;
-            } else {
-                return $queueEntry;
-            }                   
+            // if($queueEntry->wasRecentlyCreated == true) {
+            //     event(new QueueEntryEvent($queueEntry,$driverLocation));
+            //     return $queueEntry;
+            // } else {
+            //     return $queueEntry;
+            // }   
+            
+            return $queueEntry;
     }
 
     //Display queue entry by location
