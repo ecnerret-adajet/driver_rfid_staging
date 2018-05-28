@@ -14,7 +14,8 @@ trait QueueTrait {
 
         $totalEntry = QueueEntry::whereDate('created_at',Carbon::today())
                         ->where('driverqueue_id',$driverqueue_id)
-                        ->doesntHave('shipment')
+                        // ->doesntHave('shipment')
+                        ->whereNull('shipment_number')
                         ->whereNotNull('driver_availability')
                         ->whereNotNull('truck_availability')
                         ->whereNotNull('isTappedGateFirst')
@@ -22,20 +23,6 @@ trait QueueTrait {
                         ->pluck('CardholderID')
                         ->unique()
                         ->count();
-        
-        // $lastNumber = QueueEntry::whereDate('created_at',Carbon::today())
-        //                         ->where('driverqueue_id',$driverqueue_id)
-        //                         ->whereNotNull('driver_availability')
-        //                         ->whereNotNull('truck_availability')
-        //                         ->whereNotNull('isTappedGateFirst')
-        //                         ->where('isDRCompleted', '!=' ,"0000-00-00")
-        //                         ->orderBy('id','DESC')
-        //                         ->first()
-        //                         ->queue_number;
-
-        // $compute = !empty($lastNumber) ? $lastNumber + 1 : 1;
-    
-        // return $compute == $lastNumber ? $lastNumber : $compute;
 
         return $totalEntry + 1;
     

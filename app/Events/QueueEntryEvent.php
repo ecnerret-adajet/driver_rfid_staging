@@ -61,6 +61,7 @@ class QueueEntryEvent implements ShouldBroadcastNow
     {
         return $this->queueEntry->driver_availability == null || 
                $this->queueEntry->truck_availability == null ||
+               $this->queueEntry->shipment_number == null ||
                $this->queueEntry->isDRCompleted != "0000-00-00" ||
                $this->queueEntry->isTappedGateFirst == null;
     }

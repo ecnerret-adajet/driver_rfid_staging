@@ -125,7 +125,7 @@
         <script>
           setTimeout(function() {
             location.reload();
-          }, 600000); // 10 minutes page reload
+          }, 300000); // 5 minutes page reload
         </script>
 
     </body>
