@@ -63940,7 +63940,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     created: function created() {
-        // this.pushToQueue()
+        this.pushToQueue();
         this.getQueues();
         this.getTodayServed();
         this.getLastDriver();
@@ -63954,31 +63954,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('/getQueueEntries/' + this.driverqueue).then(function (response) {
                 return _this.queues = response.data;
             });
-            setTimeout(this.storeEntries, 10000); // 10 seconds
+            // setTimeout(this.storeEntries, 10000); // 10 seconds
         },
-
-
-        // pushToQueue() {
-        //     Echo.channel('queue.'+ this.driverqueue)
-        //     .listen('QueueEntryEvent', (e) => {
-        //         this.queues.push(e.queueEntry);
-        //         console.log(e.queueEntry);
-        //     });
-        // },
-
-        getTodayServed: function getTodayServed() {
+        pushToQueue: function pushToQueue() {
             var _this2 = this;
 
+            Echo.channel('queue.' + this.driverqueue).listen('QueueEntryEvent', function (e) {
+                _this2.queues.push(e.queueEntry);
+                console.log(e.queueEntry);
+            });
+        },
+        getTodayServed: function getTodayServed() {
+            var _this3 = this;
+
             axios.get('/servedToday/' + this.driverqueue).then(function (response) {
-                return _this2.todayServed = response.data;
+                return _this3.todayServed = response.data;
             });
             setTimeout(this.getTodayServed, 12000); // 12 seconds
         },
         getLastDriver: function getLastDriver() {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.post('/storeQueueEntries/' + this.driverqueue).then(function (response) {
-                return _this3.lastDriver = response.data;
+                return _this4.lastDriver = response.data;
             }).catch(function (error) {
                 console.log(error);
             });
@@ -64007,7 +64005,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 driverStatus.alertMessage = "Tap first from main gate RFID";
                 driverStatus.tableStyle = "table-danger";
             } else if (lastDriver.shipment_number) {
-                driverStatus.alertMessage = "Has now shipment assigned!";
+                driverStatus.alertMessage = "Shipment already assigned";
                 driverStatus.tableStyle = "table-primary";
             } else {
                 driverStatus.alertMessage = "Added to queue successfully!";
@@ -97164,7 +97162,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "scope": "col"
     }
-  }, [_c('small', [_c('strong', [_vm._v("\n                                    Drivers in queue # \n                                ")])])])])])])])])
+  }, [_c('small', [_c('strong', [_vm._v("\n                                    List of Drivers On Queue for Shipment\n                                ")])])])])])])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('td', {
     staticClass: "text-center",
@@ -97192,7 +97190,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "scope": "col"
     }
-  }, [_c('small', [_c('strong', [_vm._v("\n                                Shipped Drivers \n                                ")])])])])])])])])
+  }, [_c('small', [_c('strong', [_vm._v("\n                                List Drivers with Shipment\n                                ")])])])])])])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('td', {
     staticClass: "text-center",

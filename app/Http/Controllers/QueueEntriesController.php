@@ -146,9 +146,9 @@ class QueueEntriesController extends Controller
                     'plate_number' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->plate_number : null,
                     'hauler_name' => !empty($lastLogEntry->driver->hauler) ? $lastLogEntry->driver->hauler->name : null,
                     'shipment_number' => Shipment::checkIfShipped($lastLogEntry->CardholderID,null)->first(),
-                    'queue_number' =>  $this->checkIfExist($driverLocation->id) <= 1 ? 1 : $this->checkIfExist($driverLocation->id),
                 ],
                 [
+                    'queue_number' =>  $this->checkIfExist($driverLocation->id),
                     'isDRCompleted' =>  !empty($lastLogEntry->driver->truck) ? Truck::callLastTrip($lastLogEntry->driver->truck->plate_number) : null,
                     'isTappedGateFirst' => !empty(GateEntry::checkIfTappedFromGate($lastLogEntry->CardholderID)) ? 1 : null,
                     'isSecondDelivery' => $this->checkIfReturned($lastLogEntry->CardholderID) > 0 ? 1 : 0,
@@ -163,14 +163,16 @@ class QueueEntriesController extends Controller
                 ]
             );
             
-            // if($queueEntry->wasRecentlyCreated == true) {
-            //     event(new QueueEntryEvent($queueEntry,$driverLocation));
-            //     return $queueEntry;
-            // } else {
-            //     return $queueEntry;
-            // }   
+            if($queueEntry->wasRecentlyCreated == true) {
+                event(new QueueEntryEvent($queueEntry,$driverLocation));
+                return $queueEntry;
+            } else {
+                $queueLast = QueueEntry::where('driverqueue_id',$driverLocation->id)->orderBy('id','DESC')->first();
+                return $queueLast;
+                //  return $queueEntry;
+            }   
             
-            return $queueEntry;
+            // return $queueEntry;
     }
 
     //Display queue entry by location

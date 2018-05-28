@@ -13,7 +13,7 @@
                             <th  class="table-success" scope="col"> 
                                 <small>  
                                     <strong>
-                                        Drivers in queue # 
+                                        List of Drivers On Queue for Shipment
                                     </strong>
                                 </small> 
                             </th>
@@ -102,7 +102,7 @@
                             <th  class="table-warning" scope="col"> 
                                 <small> 
                                     <strong>
-                                    Shipped Drivers 
+                                    List Drivers with Shipment
                                     </strong>
                                 </small> 
                             </th>
@@ -281,7 +281,7 @@
         },
 
         created() {
-            // this.pushToQueue()
+            this.pushToQueue()
             this.getQueues()
             this.getTodayServed()
             this.getLastDriver()
@@ -291,16 +291,16 @@
             getQueues() {
                 axios.get('/getQueueEntries/' + this.driverqueue)
                 .then(response => this.queues = response.data)
-                setTimeout(this.storeEntries, 10000); // 10 seconds
+                // setTimeout(this.storeEntries, 10000); // 10 seconds
             },
 
-            // pushToQueue() {
-            //     Echo.channel('queue.'+ this.driverqueue)
-            //     .listen('QueueEntryEvent', (e) => {
-            //         this.queues.push(e.queueEntry);
-            //         console.log(e.queueEntry);
-            //     });
-            // },
+            pushToQueue() {
+                Echo.channel('queue.'+ this.driverqueue)
+                .listen('QueueEntryEvent', (e) => {
+                    this.queues.push(e.queueEntry);
+                    console.log(e.queueEntry);
+                });
+            },
 
             getTodayServed() {
                 axios.get('/servedToday/' + this.driverqueue) 
@@ -344,7 +344,7 @@
                     driverStatus.tableStyle = "table-danger";
                 } 
                 else if (lastDriver.shipment_number) {
-                    driverStatus.alertMessage = "Has now shipment assigned!";
+                    driverStatus.alertMessage = "Shipment already assigned";
                     driverStatus.tableStyle ="table-primary";
                 }
                 else {
