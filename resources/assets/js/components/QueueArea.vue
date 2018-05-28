@@ -231,7 +231,7 @@
                                 QUEUE TIME:
                             </span>
                             <p class="p-0 m-0">
-                                {{ moment(lastDriver.LocalTime.date) }}
+                                {{ moment(lastDriver.LocalTime) }}
                             </p>
                         </td>
                     </tr>

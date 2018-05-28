@@ -97138,7 +97138,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "small text-uppercase text-muted"
   }, [_vm._v("\n                            QUEUE TIME:\n                        ")]), _vm._v(" "), _c('p', {
     staticClass: "p-0 m-0"
-  }, [_vm._v("\n                            " + _vm._s(_vm.moment(_vm.lastDriver.LocalTime.date)) + "\n                        ")])])]) : _vm._e(), _vm._v(" "), (_vm.lastDriver.length != 0) ? _c('tr', {
+  }, [_vm._v("\n                            " + _vm._s(_vm.moment(_vm.lastDriver.LocalTime)) + "\n                        ")])])]) : _vm._e(), _vm._v(" "), (_vm.lastDriver.length != 0) ? _c('tr', {
     class: _vm.checkAlertMessage.tableStyle
   }, [_c('td', {
     staticClass: "text-center pb-3 pt-3",
