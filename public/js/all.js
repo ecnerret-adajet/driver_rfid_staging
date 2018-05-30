@@ -64495,7 +64495,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         backToLatest: function backToLatest() {
-            this.isSearching = false;
+            this.selected = false;
             this.date = null;
         },
         searchDate: function searchDate(date) {
@@ -92675,7 +92675,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._m(4)]) : _vm._e()])])])])]), _vm._v(" "), _c('div', {
     staticClass: "form-row mb-2 mt-3"
   }, [_c('div', {
-    staticClass: "col-12"
+    staticClass: "col-6"
   }, [_c('div', {
     staticClass: "form-group"
   }, [_c('label', {
@@ -92765,7 +92765,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Export to Excell")])])])]) : _vm._e()])])])]), _vm._v(" "), (_vm.selected) ? _c('div', {
     staticClass: "form-row mb-3 mt-1"
   }, [_c('div', {
-    staticClass: "col text-center p-3 bg-light"
+    staticClass: "col text-center p-3 bg-light text-primary"
   }, [_c('a', {
     staticClass: "text-dark h5 text-uppercase",
     staticStyle: {

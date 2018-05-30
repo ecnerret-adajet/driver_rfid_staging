@@ -34,6 +34,7 @@ class QueueEntriesController extends Controller
 
         $queues = QueueEntry::where('driverqueue_id',$driverqueue_id)
                             ->whereNotIn('CardholderID',$checkTruckscaleOut->values()->all())
+                             ->where('created_at', '>=', Carbon::today())
                             // ->whereNull('shipment_number')
                             ->doesntHave('shipment')
                             ->whereNotNull('driver_availability')
@@ -53,6 +54,7 @@ class QueueEntriesController extends Controller
         // $checkTruckscaleOut = collect(Log::truckscaleOutFromQueue($driverqueue_id))->unique();
 
         $queues = QueueEntry::with('truck','truck.plants','truck.capacity','shipment')
+                            ->whereDate('created_at',Carbon::today())
                             ->where('driverqueue_id',$driverqueue_id)
                             // ->whereNotIn('CardholderID',$checkTruckscaleOut->values()->all())
                             ->whereNotNull('driver_availability')
@@ -78,7 +80,7 @@ class QueueEntriesController extends Controller
         // $checkTruckscaleOut = collect(Log::truckscaleOutFromQueue($driverqueue_id))->unique();
 
         $queues = QueueEntry::with('truck','truck.plants','truck.capacity','shipment')
-                            ->where('driverqueue_id',$driverqueue_id)
+                            ->where('driverqueue_id',$driverqueue->id)
                             ->whereDate('LocalTime',Carbon::parse($search_date))
                             // ->whereNotIn('CardholderID',$checkTruckscaleOut->values()->all())
                             ->whereNotNull('driver_availability')
@@ -137,40 +139,41 @@ class QueueEntriesController extends Controller
                         ->orderBy('LocalTime','DESC')
                         ->with('driver','driver.image','driver.truck','driver.hauler','shipment')
                         ->first();
-                                        
+                        
 
-            $queueEntry = QueueEntry::updateOrCreate(
-                [
-                    'CardholderID' => $lastLogEntry->CardholderID,
-                    'driver_name' => $lastLogEntry->driver->name,
-                    'plate_number' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->plate_number : null,
-                    'hauler_name' => !empty($lastLogEntry->driver->hauler) ? $lastLogEntry->driver->hauler->name : null,
-                    'shipment_number' => Shipment::checkIfShipped($lastLogEntry->CardholderID,null)->first(),
-                ],
-                [
-                    'queue_number' =>  $this->checkIfExist($driverLocation->id),
-                    'isDRCompleted' =>  !empty($lastLogEntry->driver->truck) ? Truck::callLastTrip($lastLogEntry->driver->truck->plate_number) : null,
-                    'isTappedGateFirst' => !empty(GateEntry::checkIfTappedFromGate($lastLogEntry->CardholderID)) ? 1 : null,
-                    'isSecondDelivery' => $this->checkIfReturned($lastLogEntry->CardholderID) > 0 ? 1 : 0,
-                    'driver_availability' => !empty($lastLogEntry->driver) && $lastLogEntry->driver->availability == 1 ? 1 : null,
-                    'truck_availability' => !empty($lastLogEntry->driver->truck) && $lastLogEntry->driver->truck->availability == 1 ? 1 : null,
-                    'isShipmentStarted' => 0,
-                    'LogID' => $lastLogEntry->LogID,   
-                    'truck_id' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->id : null,
-                    'avatar' => !empty($lastLogEntry->driver->image) ? $lastLogEntry->driver->image->avatar : $lastLogEntry->driver->avatar,
-                    'driverqueue_id' => $driverLocation->id,
-                    'LocalTime' => $lastLogEntry->LocalTime,
-                ]
-            );
-            
-            if($queueEntry->wasRecentlyCreated == true) {
-                event(new QueueEntryEvent($queueEntry,$driverLocation));
-                return $queueEntry;
-            } else {
-                $queueLast = QueueEntry::where('driverqueue_id',$driverLocation->id)->orderBy('id','DESC')->first();
-                return $queueLast;
-                //  return $queueEntry;
-            }   
+        $queueEntry = QueueEntry::updateOrCreate(
+            [
+                'LogID' => $lastLogEntry->LogID,   
+            ],
+            [
+                'CardholderID' => $lastLogEntry->CardholderID,
+                'driver_name' => $lastLogEntry->driver->name,
+                'plate_number' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->plate_number : null,
+                'hauler_name' => !empty($lastLogEntry->driver->hauler) ? $lastLogEntry->driver->hauler->name : null,
+                'shipment_number' => Shipment::checkIfShipped($lastLogEntry->CardholderID,null)->first(),
+                'queue_number' => $this->checkIfExist($driverLocation->id),
+                // 'queue_number' => $this->checkEntry($lastLogEntry->CardholderID, $this->checkIfExist($driverLocation->id)) ? $this->checkIfExist($driverLocation->id) + 1 : $this->checkIfExist($driverLocation->id),
+                'isDRCompleted' =>  !empty($lastLogEntry->driver->truck) ? Truck::callLastTrip($lastLogEntry->driver->truck->plate_number) : null,
+                'isTappedGateFirst' => !empty(GateEntry::checkIfTappedFromGate($lastLogEntry->CardholderID)) ? 1 : null,
+                'isSecondDelivery' => $this->checkIfReturned($lastLogEntry->CardholderID) > 0 ? 1 : 0,
+                'driver_availability' => !empty($lastLogEntry->driver) && $lastLogEntry->driver->availability == 1 ? 1 : null,
+                'truck_availability' => !empty($lastLogEntry->driver->truck) && $lastLogEntry->driver->truck->availability == 1 ? 1 : null,
+                'isShipmentStarted' => 0,
+                'truck_id' => !empty($lastLogEntry->driver->truck) ? $lastLogEntry->driver->truck->id : null,
+                'avatar' => !empty($lastLogEntry->driver->image) ? $lastLogEntry->driver->image->avatar : $lastLogEntry->driver->avatar,
+                'driverqueue_id' => $driverLocation->id,
+                'LocalTime' => $lastLogEntry->LocalTime,
+            ]
+        );
+        
+        if($queueEntry->wasRecentlyCreated == true) {
+            event(new QueueEntryEvent($queueEntry,$driverLocation));
+            return $queueEntry;
+        } else {
+            $queueLast = QueueEntry::where('driverqueue_id',$driverLocation->id)->orderBy('id','DESC')->first();
+            return $queueLast;
+            //  return $queueEntry;
+        }   
             
             // return $queueEntry;
     }

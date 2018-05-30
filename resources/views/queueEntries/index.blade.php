@@ -4,6 +4,10 @@
    <div class="card mx-auto mb-3">
         <div class="card-header">
         Queues Monitoring
+
+        <a class="btn btn-sm btn-outline-primary float-right" href="{{ url('/monitor/feed') }}">
+          Visit Previous Version
+        </a>
         </div>
         <div class="card-body">
 

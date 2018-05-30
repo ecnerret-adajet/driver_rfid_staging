@@ -10,21 +10,22 @@ use App\Shipment;
 use App\Log;
 use DB;
 
-class UpdateShipment extends Command
+
+class CheckShipmentStart extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:UpdateShipment';
+    protected $signature = 'command:CheckShipmentStart';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Update shipment logs from driver RFID';
+    protected $description = 'Update the shipments table when a driver leave the plant';
 
     /**
      * Create a new command instance.
@@ -44,16 +45,12 @@ class UpdateShipment extends Command
      */
     public function handle()
     {
-
         // get all queue entries within the day in all location
         $driverqueues = Driverqueue::all();
-        
-        foreach($driverqueues as $driverqueue) {
-            
-            $check_truckscale_out = Log::truckscaleOutLocation($driverqueue->ts_out_controller);
-            $gateEntries =  Log::barrierLocation($driverqueue->gate->door,$driverqueue->gate->controller);
-            $result_lineups = Log::queueLocation($driverqueue->door, $driverqueue->controller, $check_truckscale_out, $gateEntries, Carbon::today());
-            $log_lineups = $result_lineups->unique('CardholderID');
+
+        foreach ($driverqueues as $driverqueue) {
+            $check_truckscale_out = Log::truckscaleOutLocationObject($driverqueue->ts_out_controller, null);
+            $log_lineups = $check_truckscale_out->unique('CardholderID');
             $queueObject = array();
 
             foreach($log_lineups as $key => $log)  {
@@ -64,16 +61,15 @@ class UpdateShipment extends Command
                         );
                         array_push($queueObject, $data);
                     }
-            }
-
-           $collection = collect($queueObject);
-            $LogID =  'LogID='.$collection->implode('LogID', 'LogID=');
-            $response = Curl::to('http://10.96.4.39/sapservice/api/assignedshipment')
-            ->withContentType('application/x-www-form-urlencoded')
-            ->withData( $LogID )
-            ->post();
-
+            }             
 
         }
+
+        $collection = collect($queueObject);
+        $LogID =  'LogID='.$collection->implode('LogID', 'LogID=');
+        $response = Curl::to('http://10.96.4.39/sapservice/api/assignedshipment')
+        ->withContentType('application/x-www-form-urlencoded')
+        ->withData( $LogID )
+        ->post();
     }
 }

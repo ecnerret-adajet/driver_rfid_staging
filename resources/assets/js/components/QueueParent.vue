@@ -91,7 +91,7 @@
 
         <div class="form-row mb-2 mt-3">
                      
-                <div class="col-12">
+                <div class="col-6">
                     <div class="form-group">
                         <label class="text-muted text-uppercase" >Search</label>
                         <input type="text" class="form-control"  v-model="searchString" placeholder="Search Driver Name, Plate Number" />
@@ -132,7 +132,7 @@
 
 
             <div class="form-row mb-3 mt-1" v-if="selected">
-                <div class="col text-center p-3 bg-light">
+                <div class="col text-center p-3 bg-light text-primary">
                     <a class="text-dark h5 text-uppercase" style="font-weight: 100" @click="backToLatest()" href="javascript:void(0);">
                         <i class="fa fa-arrow-left"></i> Back to latest
                     </a>
@@ -225,7 +225,7 @@
             },
 
             backToLatest() {
-                this.isSearching = false;
+                this.selected = false;
                 this.date = null;
             },
 
